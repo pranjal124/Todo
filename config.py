@@ -24,6 +24,4 @@ DB_PASSWORD = secret["password"]
 DB_NAME = secret["dbname"]
 
 # DB_HOST = "task-app-db.c3eoey2kcevb.us-west-2.rds.amazonaws.com"
-# DB_USER = "admin"
-# DB_PASSWORD = "Jesus#740#"
 # DB_NAME = "tasks"
