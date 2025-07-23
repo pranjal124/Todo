@@ -2,8 +2,8 @@ import boto3
 import json
 
 def get_secret(secret_name):
-    #region = "us-west-2"  # replace with your region
-    client = boto3.client("secretsmanager")#, region_name=region)
+    region = "us-west-2"  # replace with your region
+    client = boto3.client("secretsmanager", region_name=region)
 
     try:
         response = client.get_secret_value(SecretId=secret_name)
@@ -24,6 +24,4 @@ DB_PASSWORD = secret["password"]
 DB_NAME = secret["dbname"]
 
 # DB_HOST = "task-app-db.c3eoey2kcevb.us-west-2.rds.amazonaws.com"
-# DB_USER = "admin"
-# DB_PASSWORD = "Jesus#740#"
 # DB_NAME = "tasks"
