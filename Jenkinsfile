@@ -3,7 +3,7 @@ pipeline {
       environment {
         IMAGE_NAME = "todo-app"
         CONTAINER_NAME = "todo-container"
-        HOST_PORT = "8080"
+        HOST_PORT = "8081"
         CONTAINER_PORT = "5000"
         // AWS Credentials (configure these in Jenkins)
         AWS_ACCESS_KEY_ID = credentials('aws-access-key-id')
@@ -75,7 +75,7 @@ pipeline {
             echo 'Pipeline completed.'
         }
         success {
-            echo 'Pipeline succeeded! Application is running at http://localhost:8080'
+            echo 'Pipeline succeeded! Application is running at http://localhost:8081'
         }
         failure {
             echo 'Pipeline failed! Check the logs for details.'
