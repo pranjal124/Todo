@@ -2,8 +2,8 @@ import boto3
 import json
 
 def get_secret(secret_name):
-    #region = "us-west-2"  # replace with your region
-    client = boto3.client("secretsmanager")#, region_name=region)
+    region = "us-west-2"  # replace with your region
+    client = boto3.client("secretsmanager", region_name=region)
 
     try:
         response = client.get_secret_value(SecretId=secret_name)
