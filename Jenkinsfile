@@ -1,5 +1,6 @@
 pipeline {
-    agent any
+    agent { label 'slave1' }
+
       environment {
         IMAGE_NAME = "todo-app"
         CONTAINER_NAME = "todo-container"
