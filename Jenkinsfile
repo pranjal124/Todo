@@ -6,12 +6,10 @@ pipeline {
         HOST_PORT = "8081"
         CONTAINER_PORT = "5000"
         // AWS Configuration
-        AWS_ACCESS_KEY_ID = credentials('aws-access-key-id')
-        AWS_SECRET_ACCESS_KEY = credentials('aws-secret-access-key')
         AWS_DEFAULT_REGION = "ap-south-1"
-        AWS_ACCOUNT_ID = "905418382935" // Replace with your AWS Account ID
+        AWS_ACCOUNT_ID = "126024983515" // Replace with your AWS Account ID
         ECR_REGISTRY = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com"
-        ECR_REPOSITORY = "todo-app"
+        ECR_REPOSITORY = "todoapp"
     }
     
     stages {
@@ -73,9 +71,6 @@ pipeline {
                         docker run -d \
                             --name ${CONTAINER_NAME} \
                             -p ${HOST_PORT}:${CONTAINER_PORT} \
-                            -e AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} \
-                            -e AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} \
-                            -e AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION} \
                             ${ECR_REGISTRY}/${ECR_REPOSITORY}:latest
                     """
                 }
@@ -99,7 +94,7 @@ pipeline {
             echo 'Pipeline completed.'
         }
         success {
-            echo 'Pipeline succeeded! Application is running at http://localhost:8081'
+            echo 'Pipeline succeeded!'
         }
         failure {
             echo 'Pipeline failed! Check the logs for details.'
