@@ -20,50 +20,40 @@ mysql = MySQL(app)
 def home():
     if 'user_id' not in session:
         return redirect('/login')
-    try:
-        cur = mysql.connection.cursor()
-        cur.execute("SELECT title, description FROM tasks WHERE user_id = %s", (session['user_id'],))
-        tasks = cur.fetchall()
-        cur.close()
-        return render_template('index.html', tasks=tasks)
-    except Exception as e:
-        print("❌ Home page DB error:", e)
-        flash("Database error occurred. Check logs.")
-        return render_template('index.html', tasks=[])
+    
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT title, description FROM tasks WHERE user_id = %s", (session['user_id'],))
+    tasks = cur.fetchall()
+    cur.close()
+    return render_template('index.html', tasks=tasks)
 
 @app.route('/', methods=['POST'])
 def add_task():
     if 'user_id' not in session:
         return redirect('/login')
+    
     title = request.form['title']
     description = request.form['description']
-    try:
-        cur = mysql.connection.cursor()
-        cur.execute("INSERT INTO tasks(title, description, user_id) VALUES(%s, %s, %s)", 
-                    (title, description, session['user_id']))
-        mysql.connection.commit()
-        cur.close()
-        return redirect('/')
-    except Exception as e:
-        print("❌ Add task error:", e)
-        flash("Failed to add task. Check logs.")
-        return redirect('/')
+    cur = mysql.connection.cursor()
+    cur.execute("INSERT INTO tasks(title, description, user_id) VALUES(%s, %s, %s)", 
+                (title, description, session['user_id']))
+    mysql.connection.commit()
+    cur.close()
+    return redirect('/')
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
         username = request.form['username']
         password = generate_password_hash(request.form['password'])
-        try:
-            cur = mysql.connection.cursor()
-            cur.execute("INSERT INTO users (username, password) VALUES (%s, %s)", (username, password))
-            mysql.connection.commit()
-            cur.close()
-            flash("Signup successful! Please login.")
-            return redirect('/login')
-        except Exception as e:
-            print("❌ Signup error:", e)
-            flash(f"Signup failed: {e}")
+
+        cur = mysql.connection.cursor()
+        cur.execute("INSERT INTO users (username, password) VALUES (%s, %s)", (username, password))
+        mysql.connection.commit()
+        cur.close()
+
+        flash("Signup successful! Please login.")
+        return redirect('/login')
     return render_template('signup.html')
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -71,21 +61,18 @@ def login():
     if request.method == 'POST':
         username = request.form['username']
         password_input = request.form['password']
-        try:
-            cur = mysql.connection.cursor()
-            cur.execute("SELECT id, password FROM users WHERE username = %s", (username,))
-            user = cur.fetchone()
-            cur.close()
 
-            if user and check_password_hash(user[1], password_input):
-                session['user_id'] = user[0]
-                session['username'] = username
-                return redirect('/')
-            else:
-                flash("Invalid credentials")
-        except Exception as e:
-            print("❌ Login error:", e)
-            flash(f"Login failed: {e}")
+        cur = mysql.connection.cursor()
+        cur.execute("SELECT id, password FROM users WHERE username = %s", (username,))
+        user = cur.fetchone()
+        cur.close()
+
+        if user and check_password_hash(user[1], password_input):
+            session['user_id'] = user[0]
+            session['username'] = username
+            return redirect('/')
+        else:
+            flash("Invalid credentials")
     return render_template('login.html')
 
 @app.route('/logout')
@@ -94,4 +81,4 @@ def logout():
     return redirect('/login')
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=5000)
